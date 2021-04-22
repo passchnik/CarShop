@@ -3,16 +3,9 @@
     <h1>Все автомобили</h1>
 
     @{
-        foreach (var car in Model.AllCars)
+        foreach (Car car in Model.AllCars)
         {
-            <div class="col-lg-4">
-                <img class="img-thumbnail" src="@car.Img" width="255" height="190" alt="@car.ShortDescription" />
-                <h2>Модель: @car.Name</h2>
-                <p>Описание: @car.ShortDescription</p>
-                <p>Цена: @car.Price.ToString("c")</p>
-                <p><a class="btn btn-warning">Подробнее</a></p>
-            </div>
-            
+            @Html.Partial("AllCars", car)
         }
 
     }

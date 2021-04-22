@@ -1,11 +1,16 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Shop.Data;
 using Shop.Data.Interfaces;
 using Shop.Data.Mocks;
+using Shop.Data.Models;
+using Shop.Data.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,9 +20,14 @@ namespace Shop
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+
+        private IConfigurationRoot configurationString;
+
+
+
+        public Startup(Microsoft.AspNetCore.Hosting.IHostingEnvironment hostingEnvironment)
         {
-            Configuration = configuration;
+            configurationString = new ConfigurationBuilder().SetBasePath(hostingEnvironment.ContentRootPath).AddJsonFile("dbsettings.json").Build();
         }
 
         public IConfiguration Configuration { get; }
@@ -25,15 +35,27 @@ namespace Shop
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddRazorPages();
-            services.AddMvc();
-            services.AddTransient<IAllCars, MockCars>();
-            services.AddTransient<ICarsCategory, MockCategory>();
+            services.AddRazorPages(); 
+            
+            services.AddTransient<IAllCars, CarRepository>();
+            services.AddTransient<ICarsCategory, CategoryRepository>();
 
-            services.AddMvc(options =>
+            services.AddDbContext<AppDBContent>(options => options.UseSqlServer(configurationString.GetConnectionString("DefaultConnection")));
+
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddScoped(sp => ShopCart.GetCart(sp));
+
+            
+
+            services.AddMvcCore();
+            
+
+            services.AddMvcCore(options =>
             {
                 options.EnableEndpointRouting = false;
             });
+            services.AddMemoryCache();
+            services.AddSession();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -51,6 +73,8 @@ namespace Shop
                 app.UseHsts();
             }
 
+            app.UseSession();
+
             app.UseStatusCodePages();
             app.UseMvcWithDefaultRoute();
 
@@ -65,6 +89,17 @@ namespace Shop
             {
                 endpoints.MapRazorPages();
             });
+
+          
+
+            using (var scope = app.ApplicationServices.CreateScope())
+            {
+                AppDBContent content = scope.ServiceProvider.GetRequiredService<AppDBContent>();
+                DBObjects.Initial(content);
+            }
+
+            
+
         }
     }
 }

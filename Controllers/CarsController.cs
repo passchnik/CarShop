@@ -20,7 +20,7 @@ namespace Shop.Controllers
             _carsCategory = carsCategory;
         }
 
-        public ViewResult List()
+        public Microsoft.AspNetCore.Mvc.ViewResult List()
         {
             ViewBag.Title = "Страница с автомобилями";
 
