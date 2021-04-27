@@ -23,5 +23,6 @@ namespace Shop.Data.Repository
 
         public Car GetCar(Car carId) => appDBContent.Cars.FirstOrDefault(e => e.Id == carId.Id);
         
+        
     }
 }

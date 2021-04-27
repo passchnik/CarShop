@@ -44,7 +44,7 @@ namespace Shop.Controllers
                 shopCart.AddToCart(item);
             }
 
-            return RedirectToAction("Ibdex");
+            return RedirectToAction("Index");
         }
     }
 }

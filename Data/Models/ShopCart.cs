@@ -41,7 +41,7 @@ namespace Shop.Data.Models
                 Price = car.Price
             });
 
-            appDBContent.SaveChangesAsync();
+            appDBContent.SaveChanges();
         }
 
         public List<ShopCartItem> getShopItems()

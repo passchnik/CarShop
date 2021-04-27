@@ -12,13 +12,13 @@ namespace Shop.Data
     {
         public static void Initial(AppDBContent content)
         {
-            
-
 
             if (!content.Categories.Any())
             {
                 content.Categories.AddRange(Categories.Select(c => c.Value));
             }
+
+            content.SaveChanges();
 
             if (!content.Cars.Any())
             {
@@ -32,7 +32,7 @@ namespace Shop.Data
                             ShortDescription = "Автомобиль Tesla",
                             LongDescription = "",
                             Price = 75000,
-                            Img = "https://lh3.googleusercontent.com/proxy/ysqXg9L7ECQn8geAGzLwAf-8dvIqgupgncZOvHzQqbR3Aj4Ar6x7Tro8eNOxZs4_aRDFsNHubchH58XOzIuup_Z1tg",
+                            Img = "https://i0.wp.com/itc.ua/wp-content/uploads/2017/06/model-x-five-star-rating-hero.jpg",
                             Category = Categories["Электромобиль"]   //content.Categories.AllCategories.First(e => e.Name == "Электромобиль")
                         },
 
@@ -46,7 +46,7 @@ namespace Shop.Data
                         ShortDescription = "Автомобиль BMW",
                         LongDescription = "",
                         Price = 100000,
-                        Img = "https://lh3.googleusercontent.com/proxy/1UZtrRbSGK8afRt2qJHn8cDe5d84y7kbmWFe3LOothQ9Rur3_XFRVTrE7tjuhA1m8id_qGBap3ZOa2dZ9mdju43Mhg",
+                        Img = "https://wroom.ru/i/cars2/bmw_5_7.jpg",
                         Category = Categories["Классичсекий автомобиль"]  
                     },
 
@@ -111,7 +111,7 @@ namespace Shop.Data
 
             }
         }
-        
 
+        
     }
 }
